@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('chef_id')->constrained('chefs')->onDelete('cascade');
             $table->decimal('amount', 10, 2);
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'approved', 'rejected','reachScore'])->default('pending');
             $table->timestamps();
         });
     }
