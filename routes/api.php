@@ -46,8 +46,10 @@ Route::middleware(EnsureUser::class)->group(function () {
 
     // -----------------------Cart----------------------------
     Route::post('addCart', [CartController::class, 'addToCart']);
+    Route::put('/cart', [CartController::class, 'updateCart']);
     Route::get('/cart', [CartController::class, 'getCart']);
     Route::delete('/cart/{id}', [CartController::class, 'removeFromCart']);
+
 
 
     // -----------------------Order----------------------------
@@ -80,5 +82,6 @@ Route::middleware(EnsureUser::class)->group(function () {
     Route::apiResource('addresses', AddressController::class);
 });
 
-
+Route::get('walletRechargeSuccess', [WalletController::class, 'walletRechargeSuccess'])->name('payment.wallet.callback');
+Route::get('walletRechargeError', [WalletController::class, 'rechargeWalletError'])->name('payment.wallet.error');
 Route::apiResource('categories', CategoryController::class);

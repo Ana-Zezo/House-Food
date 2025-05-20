@@ -15,13 +15,14 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use MyFatoorah\Library\MyFatoorah;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FoodResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\OrderResource;
 use MyFatoorah\Library\API\Payment\MyFatoorahPayment;
-use App\Http\Resources\Transaction\TransactionResource;
 
+use App\Http\Resources\Transaction\TransactionResource;
 use MyFatoorah\Library\API\Payment\MyFatoorahPaymentStatus;
 use MyFatoorah\Library\API\Payment\MyFatoorahPaymentEmbedded;
 
@@ -59,6 +60,8 @@ class OrderController extends Controller
                 : $item->food->price) * $item->qty
             : 0
         );
+        Log::info('PayOrder Request:', ['request' => $request->all()]);
+        Log::info('PayOrder Request:', ['request' => $cartItems]);
 
         $order = Order::create([
             'user_id' => $user->id,
@@ -92,6 +95,7 @@ class OrderController extends Controller
     // PayOrder
     public function payOrder(Request $request, $orderId)
     {
+        Log::info('PayOrder Request:', ['request' => $request->all()]);
         $request->validate([
             'payment' => 'required|in:wallet,credit',
         ]);
@@ -139,7 +143,7 @@ class OrderController extends Controller
                     'type' => 'payOrder',
                     'status' => 'success',
                 ]);
-                return ApiResponse::sendResponse(true, __('Order_paid_successfully_via_Wallet'));
+                return ApiResponse::sendResponse(true, __('messages.Order_paid_successfully_via_Wallet') );
             });
         }
 
@@ -180,7 +184,7 @@ class OrderController extends Controller
         return ApiResponse::errorResponse(false, __('messages.invalid_payment_method'));
     }
 
-   
+
     public function paymentCallback(Request $request)
     {
         try {
@@ -334,7 +338,7 @@ class OrderController extends Controller
 
         return ApiResponse::sendResponse(true, __('messages.order_updated_successfully'));
     }
-    
+
     public function updateOrdersByStatus(Request $request, $id)
     {
         $chef = Auth::user();
@@ -420,8 +424,8 @@ class OrderController extends Controller
             'total_completed_orders' => OrderItem::where('chef_id', $chef->id)
                 ->where('chef_status', 'complete')
                 ->count(),
-            'total_dishes' => $chef->food ? $chef->food->count() : 0,  
-            'total_followers' => $chef->followers ? $chef->followers->count() : 0, 
+            'total_dishes' => $chef->food ? $chef->food->count() : 0,
+            'total_followers' => $chef->followers ? $chef->followers->count() : 0,
         ];
 
         return response()->json([

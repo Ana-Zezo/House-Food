@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->foreignId('chef_id')->constrained('chefs')->cascadeOnDelete();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('image')->nullable();
             $table->decimal('price', 8, 2);
             $table->decimal('offer_price', 8, 2)->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');

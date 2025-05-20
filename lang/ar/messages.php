@@ -7,6 +7,7 @@ return [
     'Phone number does not exist. Please register.' => 'روح سجل وتعالى تانى',
     'Phone number not verified. Please verify to log in' => 'يعم شوف OTP بتاعك صح',
     'recharge' => 'اضافة رصيد',
+    'chefCancelOrder' => 'رفض الطلب',
     'wallet' => 'المحفظة',
     'all_data_retrieved_successfully' => 'تم استرجاع البيانات بنجاح',
     'data_retrieved_successfully' => 'تم استرجاع البيانات بنجاح',

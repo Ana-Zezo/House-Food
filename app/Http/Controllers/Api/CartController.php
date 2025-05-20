@@ -35,13 +35,13 @@ class CartController extends Controller
                 'qty' => $request->qty,
             ]);
         }
-        return ApiResponse::sendResponse(true,__('messages.added_to_cart_successfully'));
+        return ApiResponse::sendResponse(true, __('messages.added_to_cart_successfully'));
     }
     public function getCart()
     {
         $user = Auth::user();
-        $cartItems = $user->cartItems()->with('food')->get(); 
-        return ApiResponse::sendResponse(true, __('messages.cart_retrieved_successfully')   , $cartItems);
+        $cartItems = $user->cartItems()->with('food')->get();
+        return ApiResponse::sendResponse(true, __('messages.cart_retrieved_successfully'), $cartItems);
     }
 
 
@@ -57,7 +57,28 @@ class CartController extends Controller
 
         $cartItem->delete();
 
-        return ApiResponse::sendResponse(true,  __('messages.removed_from_cart_successfully'));
+        return ApiResponse::sendResponse(true, __('messages.removed_from_cart_successfully'));
     }
+
+    public function updateCart(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:carts,id',
+            'qty' => 'required|array',
+            'qty.*' => 'integer|min:1',
+        ]);
+
+        foreach ($request->ids as $index => $cartId) {
+            $cartItem = Cart::find($cartId);
+            if ($cartItem) {
+                $cartItem->qty = $request->qty[$index];
+                $cartItem->save();
+            }
+        }
+
+        return ApiResponse::sendResponse(true, __('messages.cart_updated_successfully'));
+    }
+
 
 }

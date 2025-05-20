@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\ReviewResource;
+use App\Http\Resources\ImageGalleryResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FoodResource extends JsonResource
@@ -18,9 +20,10 @@ class FoodResource extends JsonResource
             'id' => $this->id,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'chef' => new ChefResource($this->whenLoaded('chef')),
+            'images' => ImageGalleryResource::collection($this->whenLoaded('imageGalleries')),
+            'reviews' => ReviewResource::collection($this->whenLoaded('reviews')),
             'name' => $this->name,
             'description' => $this->description,
-            'image' => $this->image,
             'price' => $this->price,
             'offer_price' => $this->offer_price,
             'status' => $this->status,

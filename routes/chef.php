@@ -22,7 +22,7 @@ Route::middleware(EnsureChef::class)->group(function () {
     Route::get('/profile', [ChefAuthController::class, 'profile']);
     Route::post('/profile', [ChefAuthController::class, 'updateProfile']);
     // -----------------------Foods----------------------------
-    Route::apiResource('foods', FoodController::class)->except('show');
+    Route::apiResource('foods', FoodController::class);
     Route::put('update/order/{id}', [OrderController::class, 'updateOrdersByStatus']);
     Route::get('home', [OrderController::class, 'getOrdersByStatus']);
 

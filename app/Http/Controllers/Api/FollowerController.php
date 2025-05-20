@@ -52,6 +52,8 @@ class FollowerController extends Controller
             return ApiResponse::errorResponse(false, 'You do not follow this chef.');
         }
 
+        Chef::where('id', $chef_id)->decrement('countSubscribe');
+
         $follower->delete();
 
         return ApiResponse::sendResponse(true, 'The chef has been unfollowed.');

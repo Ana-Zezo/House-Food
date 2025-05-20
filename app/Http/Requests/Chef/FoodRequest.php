@@ -25,7 +25,7 @@ class FoodRequest extends FormRequest
 
             $response = response()->json([
                 'status' => false,
-                'errors' => $validator->errors()->all(),
+                'message' => $validator->errors()->all(),
             ], 422);
 
             throw new HttpResponseException($response);
@@ -42,7 +42,7 @@ class FoodRequest extends FormRequest
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'required|image',
+            'images' => 'required',
             'price' => 'required|numeric|min:0',
             'offer_price' => 'nullable|numeric|min:0|lt:price',
             'status' => 'nullable|in:active,inactive',
