@@ -51,10 +51,10 @@ return [
             'driver' => 'sanctum',
             'provider' => 'chefs',
         ],
-        // 'admin' => [
-        //     'driver' => 'sanctum',
-        //     'provider' => 'admins',
-        // ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
 
     ],
 
@@ -85,10 +85,10 @@ return [
             'driver' => 'eloquent',
             'model' => Chef::class,
         ],
-        // 'admins' => [
-        //     'driver' => 'eloquent',
-        //     'model' => Admin::class,
-        // ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => Admin::class,
+        ],
 
         /*
         |--------------------------------------------------------------------------
@@ -116,6 +116,13 @@ return [
                 'expire' => 60,
                 'throttle' => 60,
             ],
+            'admins' => [
+                'provider' => 'admins',
+                'table' => 'password_reset_tokens',
+                'expire' => 60,
+                'throttle' => 60,
+            ],
+
         ],
 
         /*

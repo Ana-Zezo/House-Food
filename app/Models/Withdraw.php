@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Models\Chef;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Withdraw extends Model
 {
-    protected $fillable = ['chef_id', 'amount', 'status', 'totalOrder'];
+    use HasFactory;
+    protected $fillable = ['chef_id', 'amount', 'status'];
+
 
 
     public function chef()

@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Providers;
+
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\App;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Debug\ExceptionHandler;
@@ -11,16 +15,16 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap any application services.
      */
-    public function boot(Request $request): void
-    {
 
+    public function boot()
+    {
+        View::composer('*', function ($view) {
+            $view->with('admin', Auth::guard('admin')->user());
+        });
     }
 }

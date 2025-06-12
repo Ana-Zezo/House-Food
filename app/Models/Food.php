@@ -7,9 +7,13 @@ use App\Models\Review;
 use App\Models\Category;
 use App\Models\Follower;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Food extends Model
+
 {
+    use HasFactory;
+
     protected $fillable = ['category_id', 'chef_id', 'name', 'description', 'price', 'offer_price', 'preparation_time', 'rating', 'food_type', 'image', 'status'];
 
     protected $table = 'foods';

@@ -18,54 +18,52 @@ class FoodSeeder extends Seeder
      */
     public function run(): void
     {
-        $letters = range('a', 'z'); // جميع الحروف الأبجدية
+        $letters = range('a', 'z');
+
+        Food::factory()->count(40)->create();
 
         foreach ($letters as $letter) {
             $response = Http::get("https://www.themealdb.com/api/json/v1/1/search.php?f={$letter}");
 
             if ($response->successful()) {
-                $meals = $response->json()['meals'] ?? null; // تجنب الخطأ عند عدم وجود بيانات
+                $meals = $response->json()['meals'] ?? null;
 
                 if (!$meals) {
-                    continue; // إذا لم تكن هناك وجبات، انتقل إلى الحرف التالي
+                    continue;
                 }
 
                 foreach ($meals as $meal) {
                     try {
-                        // تحميل الصورة من API
                         $imageUrl = $meal['strMealThumb'];
-
-                        // التأكد من أن الرابط صالح
                         if (!$imageUrl) {
                             continue;
                         }
 
-                        $imageName = 'uploads/images/foods/' . Str::random(10) . '.jpg'; // اسم عشوائي للصورة
+                        $imageName = 'uploads/images/foods/' . Str::random(10) . '.jpg';
 
-                        // تنزيل الصورة وحفظها في storage/app/public/foods
-                        $imageContents = @file_get_contents($imageUrl);
-                        if ($imageContents === false) {
-                            continue; // تخطي الوجبة إذا فشل تحميل الصورة
-                        }
+                        $imageContents = Http::get($imageUrl)->body();
 
                         Storage::disk('public')->put($imageName, $imageContents);
-                        // تخزين البيانات في قاعدة البيانات
+
+                        $price = rand(50, 150);
+                        $offer_price = rand(30, $price);
+
                         Food::create([
                             'category_id' => rand(1, 4),
                             'chef_id' => rand(1, 3),
                             'name' => $meal['strMeal'],
-                            'description' => 'وصفة مصرية لذيذة مصنوعة من مكونات طازجة.',
-                            'price' => rand(50, 150),
-                            'offer_price' => rand(30, 120),
+                            'description' => $meal['strInstructions'] ?? 'No description available.',
+                            'price' => $price,
+                            'offer_price' => $offer_price,
                             'preparation_time' => rand(10, 60),
-                            'rating' => rand(3, 5),
+                            'rating' => mt_rand(30, 50) / 10,
                             'food_type' => ['full', 'half'][rand(0, 1)],
-                            'image' => "storage/" . $imageName, // حفظ مسار الصورة فقط
+                            'image' => $imageName,
                             'status' => ['active', 'inactive'][rand(0, 1)],
                         ]);
                     } catch (\Exception $e) {
                         Log::error("خطأ أثناء حفظ الوجبة: " . $e->getMessage());
-                        continue; // تخطي الوجبة في حالة وجود خطأ
+                        continue;
                     }
                 }
             }
